@@ -1,31 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
+import CartContext from "../../store/CartContext";
 import styles from './Cart.module.css';
 import Modal from "./Modal";
 
-const cartItems = 'Hello'
-// (
-//    <ul className={styles['cart-items']}>
-//       {[{
-//          id: 'm1',
-//          name: 'name1',
-//          amount: 2,
-//          price: 10
-//       }].map(item => {
-//          <li>{item.name}</li>
-//       })}
-//    </ul>
-// )
+
 
 const Cart = (props) => {
+   const cartContext = useContext(CartContext);
+
+   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
+   const hasItems = cartContext.items.length > 0;
+
+   const cartItems = (
+      <ul className={styles['cart-items']}>
+         {cartContext.items.map(item => (
+            <li>{item.name}</li>
+         ))}
+      </ul>
+   )
+
    return (
       <Modal onHideCart={props.onHideCart}>
          {cartItems}
          <div className={styles.total}>
             <span>Итого</span>
-            <span>$49.99</span>
+            <span>{totalAmount}</span>
          </div>
          <div className={styles.actions}>
-            <button className={styles.button}>Заказать</button>
+            {hasItems && <button className={styles.button}>Заказать</button>}
             <button className={styles['button-alt']} onClick={props.onHideCart}>Закрыть</button>
          </div>
       </Modal>
